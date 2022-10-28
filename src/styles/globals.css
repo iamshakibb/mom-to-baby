@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima:wght@100;200;300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply !font-Arima w-full h-full;
+  }
+}
+
+.slick-prev {
+  left: 45% !important;
+  top: 100% !important;
+  z-index: 50;
+}
+
+.slick-next {
+  right: 45% !important;
+  top: 100% !important;
+  z-index: 50;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #000 !important;
+  font-size: 30px !important;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
