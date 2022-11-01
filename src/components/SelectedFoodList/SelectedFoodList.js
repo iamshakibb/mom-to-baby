@@ -14,12 +14,12 @@ const SelectedFoodList = ({ isOpen, closeModal }) => {
   }, [isOpen])
 
   const fetchSelectedFood = (foodNames) => {
-    return foodList.filter(li => foodNames.includes(li.name.toLowerCase()) )
+    return foodList.filter(li => foodNames.includes(li.name.toLowerCase()))
   }
 
   const removeFood = (name) => {
     const foodList = selectedFood.filter(f => f.toLowerCase() !== name.toLowerCase())
-    localStorage.setItem('selected-food',JSON.stringify(foodList));
+    localStorage.setItem('selected-food', JSON.stringify(foodList));
     setSelectedFood([...foodList])
   }
 
@@ -27,27 +27,24 @@ const SelectedFoodList = ({ isOpen, closeModal }) => {
     <Modal isOpen={isOpen} closeModal={closeModal} heading="Selected Food">
       <div className='w-full h-full'>
         {
-          selectedFood && selectedFood?.length === 0 ? <div className='flex items-center justify-center w-full h-full text-base text-gray-600'>
-            
-            <p className='flex items-center justify-center w-full'><span className='mr-4 -mt-1 text-red-700'>
-              <HiOutlineExclamationCircle />
-            </span>You haven&apos; t selected any food.
-            </p>
-          </div> : <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-              {fetchSelectedFood(selectedFood)?.map((f, idx) => (
-                <div key={idx} className="group">
-                  <div className='relative w-full h-[150px] mb-3'>
-                    <Image className='w-full rounded-xl' src={f.image} layout="fill" alt={f.name} />
-                    <div
-                      onClick={() => removeFood(f.name)}
-                    className='w-[20px] h-[20px] rounded-full bg-red-400 absolute right-2 top-2 flex items-center justify-center md:opacity-0 group-hover:opacity-100 transform ease-in duration-300 cursor-pointer text-[12px]'>
-                      <FaTimes />
-                    </div>
-                  </div>
-                  <p className='text-center'>{f.name}</p>
-                </div>
+          selectedFood && selectedFood?.length === 0 ?
+            <div className='flex items-center justify-center w-full h-full text-base text-gray-600'>
+
+              <p className='flex items-center justify-center w-full'><span className='mr-4 -mt-1 text-red-700'>
+                <HiOutlineExclamationCircle />
+              </span>You haven&apos; t selected any food.
+              </p>
+            </div> :
+            <ol>
+              {selectedFood?.map((f, idx) => (
+                <li key={idx} className="group list-decimal bg-purple-300 mb-4 py-4 px-3 rounded capitalize flex justify-between items-center">
+                  <span>{f}</span>
+                  <span onClick={() => removeFood(f)}>
+                    <FaTimes/>
+                  </span>
+                </li>
               ))}
-          </div> 
+            </ol>
         }
       </div>
     </Modal>
