@@ -11,11 +11,11 @@ const CategoryPage = () => {
   const data = recipesData.find(d => d.category_name.replaceAll(" ", "-").toLowerCase() === pageName)
   return (
     <Layout>
-      <div className='container mt-10 grid grid-cols-1 md:grid-cols-2 justify-items-center'>
+      <div className='container grid grid-cols-1 mt-10 md:grid-cols-2 justify-items-center'>
         {
           data?.list?.map(m => (
             <Link key={m.id} href={`/recipes/${pageName}/${m.name.replaceAll(" ", '-').toLowerCase()}`}>
-              <a className="mb-10 flex flex-col justify-center items-center">
+              <a className="flex flex-col items-center justify-center mb-10">
                 <div className='relative group w-[250px] h-[250px] xl:w-[350px] xl:h-[350px] lg:w-[300px] lg:h-[300px] md:w-[200px] md:h-[200px] sm:w-[380px] sm:h-[380px] mb-3'>
                   <Image src={m.image} width={300} height={300} alt={m.name} layout="fill" className='rounded-lg' />
                 </div>

@@ -1,50 +1,15 @@
 import Image from 'next/image'
 import React, { useState } from 'react'
-import Slider from 'react-slick';
 import Layout from '../../components/Layout/Layout'
 import { meditation } from '../../utils/data'
 import { BsPlay } from "react-icons/bs"
 import Link from 'next/link';
 
-const settings = {
-  dots: false,
-  infinite: false,
-  speed: 500,
-  slidesToShow: 3,
-  slidesToScroll: 3,
-  arrows: false,
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        infinite: true,
-        dots: true
-      }
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 2,
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1
-      }
-    }
-  ]
-};
-
 const Meditation = () => {
   const [meditationData, setMeditationData] = useState(meditation)
   return (
     <Layout>
-      <div className='container mt-10 grid grid-cols-1 md:grid-cols-2 justify-items-center'>
+      <div className='container grid grid-cols-1 mt-10 md:grid-cols-2 justify-items-center'>
         {
           meditationData.map(m => (
             <Link key={m.id} href={`/meditation/${m.slug.toLowerCase()}`}>
@@ -55,7 +20,7 @@ const Meditation = () => {
                     <BsPlay />
                   </div>
                 </div>
-                <h1 className='mb-6 text-lg capitalize text-center'>{m.meditation_name}</h1>
+                <h1 className='mb-6 text-lg text-center capitalize'>{m.meditation_name}</h1>
               </a>
             </Link>
           ))

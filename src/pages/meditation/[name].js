@@ -13,10 +13,9 @@ const SingleMeditation = () => {
   const meditationData = meditation.filter(m => m.slug === categoryName)?.[0];
   const getImage = (url) => grabLink(url, 'max')
 
-  console.log(getImage('https://youtu.be/feVaUSI9pl4'));
   return (
     <Layout>
-      <div className="container mt-10 grid grid-cols-1 md:grid-cols-2 justify-items-center">
+      <div className="container grid grid-cols-1 mt-10 md:grid-cols-2 justify-items-center">
         {
           meditationData?.list?.map(l => (
             <a href={l.link} key={l.id} className="w-full" target="_blank" rel="noopener noreferrer">

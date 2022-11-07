@@ -13,9 +13,6 @@ const SelectedFoodList = ({ isOpen, closeModal }) => {
     setSelectedFood(foodItem ? foodItem : [])
   }, [isOpen])
 
-  const fetchSelectedFood = (foodNames) => {
-    return foodList.filter(li => foodNames.includes(li.name.toLowerCase()))
-  }
 
   const removeFood = (name) => {
     const foodList = selectedFood.filter(f => f.toLowerCase() !== name.toLowerCase())
@@ -37,7 +34,7 @@ const SelectedFoodList = ({ isOpen, closeModal }) => {
             </div> :
             <ol>
               {selectedFood?.map((f, idx) => (
-                <li key={idx} className="group list-decimal bg-purple-300 mb-4 py-4 px-3 rounded capitalize flex justify-between items-center">
+                <li key={idx} className="flex items-center justify-between px-3 py-4 mb-4 capitalize list-decimal bg-purple-300 rounded group">
                   <span>{f}</span>
                   <span onClick={() => removeFood(f)}>
                     <FaTimes/>

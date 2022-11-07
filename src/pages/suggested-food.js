@@ -55,9 +55,7 @@ const SuggestedFood = () => {
       <Modal isOpen={isOpen} closeModal={() => setIsOpen(prev => !prev)} />
       <div className='container mt-5'>
         <AddFood handleSelectFood={handleSelectFood} />
-
         <Complication selected={selected} handleOption={handleOption} />
-
         <div className='grid grid-cols-1 gap-3 md:grid-cols-3 mt-14'>
           {
             foodData.map((l, idx) => (
@@ -97,11 +95,12 @@ const AddFood = ({ handleSelectFood }) => {
               <FiChevronDown />
             </Disclosure.Button>
             <Disclosure.Panel className="pb-2 ">
-              <form onSubmit={handleAddForm} className='flex flex-col rounded-bl-lg rounded-br-lg bg-blue-400 p-5'>
+              <form onSubmit={handleAddForm} className='flex flex-col p-5 bg-blue-400 rounded-bl-lg rounded-br-lg'>
                 <input
                   onChange={(e) => handleInputs(e)}
-                  className=" border-2 rounded-sm pl-2 w-full md:w-1/2 h-[40px]" placeholder='Enter your food name'
-                  type="name"
+                  className=" border-2 rounded-sm pl-2 w-full md:w-1/2 h-[40px]" 
+                  placeholder='Enter your food name'
+                  type="text"
                   name="food_name"
                   value={input}
                   required
