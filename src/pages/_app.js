@@ -1,18 +1,24 @@
 import '../styles/globals.css'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import 'react-notifications-component/dist/theme.css';
+import 'filepond/dist/filepond.min.css'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import { RiShoppingBasketLine } from "react-icons/ri"
 import SelectedFoodList from '../components/SelectedFoodList/SelectedFoodList';
 import { useState } from 'react';
+import { ReactNotifications } from 'react-notifications-component';
+import mainHOC from '../HOC/mainHoc';
 
 function MyApp({ Component, pageProps }) {
   return <>
+    <ReactNotifications />
     <Component {...pageProps} />
     <FoodBtn />
   </>
 }
 
-export default MyApp
+export default mainHOC(MyApp)
 
 
 const FoodBtn = () => {

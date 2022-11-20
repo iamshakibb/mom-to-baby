@@ -5,151 +5,198 @@ export const foodList = [
     id: randomId(),
     name: "Meat",
     image: "/images/meat.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Chicken",
     image: "/images/chicken.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Fish",
     image: "/images/Fish.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Egg",
     image: "/images/eggs.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Beans",
     image: "/images/beans.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Spinach",
     image: "/images/Spinach.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Broccoli",
     image: "/images/broccoli.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Nuts",
     image: "/images/nuts.png",
-    disease: ['anemia']
+    disease: ['anemia'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Yogurt",
     image: "/images/yogurt.png",
-    disease: ['urinary tract infection']
+    disease: ['urinary tract infection'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Blueberries",
     image: "/images/blueberries.png",
-    disease: ['urinary tract infection']
+    disease: ['urinary tract infection'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Pickle",
     image: "/images/pickle.png",
-    disease: ['urinary tract infection']
+    disease: ['urinary tract infection'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
-    name: "Canberry Juice",
+    name: "Cranberry Juice",
     image: "/images/canberry_juice.png",
-    disease: ['urinary tract infection']
+    disease: ['urinary tract infection'],
+    category_name: ['carbohydrate']
   },
   {
     id: randomId(),
     name: "Potatoes",
     image: "/images/potatoes.jpg",
-    disease: ['hypertension']
+    disease: ['hypertension'],
+    category_name: ['carbohydrate']
   },
   {
     id: randomId(),
     name: "Tomatoes",
     image: "/images/tomatoes.jpg",
-    disease: ['hypertension']
+    disease: ['hypertension'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Sweet Potatoes",
     image: "/images/sweet_potatoes.jpg",
-    disease: ['hypertension']
+    disease: ['hypertension'],
+    category_name: ['carbohydrate']
   },
   {
     id: randomId(),
     name: "Kidney Beans",
     image: "/images/kidney_beans.jpg",
-    disease: ['hypertension']
+    disease: ['hypertension'],
+    category_name: ['carbohydrate']
   },
   {
     id: randomId(),
     name: "Orange",
     image: "/images/orange.jpg",
-    disease: ['hypertension']
+    disease: ['hypertension'],
+    category_name: ['vitamins and minerals']
   },
+  // ggg
   {
     id: randomId(),
     name: "Bananas",
     image: "/images/bananas.jpg",
-    disease: ['hypertension', 'diabetes']
+    disease: ['hypertension', 'diabetes'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Melon",
     image: "/images/melon.jpg",
-    disease: ['hypertension', 'diabetes']
+    disease: ['hypertension', 'diabetes'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Peas",
     image: "/images/peas.jpg",
-    disease: ['hypertension', 'diabetes']
+    disease: ['hypertension', 'diabetes'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Milk",
     image: "/images/milk.jpg",
-    disease: ['diabetes']
+    disease: ['diabetes'],
+    category_name: ['protein']
   },
   {
     id: randomId(),
     name: "Apples",
     image: "/images/apples.jpg",
-    disease: ['diabetes']
+    disease: ['diabetes'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Mangoes",
     image: "/images/mango.jpg",
-    disease: ['diabetes']
+    disease: ['diabetes'],
+    category_name: ['vitamins and minerals']
   },
   {
     id: randomId(),
     name: "Brown rice",
     image: "/images/rice.jpg",
-    disease: ['diabetes']
+    disease: ['diabetes'],
+    category_name: ['carbohydrate']
   },
   {
     id: randomId(),
     name: "Oats",
     image: "/images/oats.jpg",
-    disease: ['diabetes']
+    disease: ['diabetes'],
+    category_name: ['carbohydrate']
+  },
+  {
+    id: randomId(),
+    name: "Avocado",
+    image: "/images/avocado.jpg",
+    disease: ['diabetes'],
+    category_name: ['fats']
+  },
+  {
+    id: randomId(),
+    name: "Olive",
+    image: "/images/olive.jpg",
+    disease: ['diabetes'],
+    category_name: ['fats']
+  },
+  {
+    id: randomId(),
+    name: "Almond Butter",
+    image: "/images/almond_butter.jpg",
+    disease: ['diabetes'],
+    category_name: ['fats']
   },
 ]
 
@@ -169,7 +216,10 @@ export const plans = [
   {
     name: 'diabetes',
     advice: 'Do not add sugar, honey or syrup to your foods!'
-  }
+  },
+  // {
+  //   name: 'vegetarian',
+  // }
 ]
 
 export const meditation = [

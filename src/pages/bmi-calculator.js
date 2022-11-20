@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import { Listbox, Transition } from '@headlessui/react'
+import Link from 'next/link'
+import React, { Fragment, useState } from 'react'
 import Layout from '../components/Layout/Layout'
-
+import { MdKeyboardArrowRight } from "react-icons/md"
+const conditions = [
+  { name: 'inactive?(get minimal exercise)' },
+  { name: 'moderately active? (workout 3-4 times a week)' },
+  { name: 'very much active?( workout 5-7 times a week)' },
+]
 const BMI = () => {
   const [inputs, setInputs] = useState({
     beforeWeight: 0,
     afterWeight: 0,
     month: 0,
   })
-
+  const [selected, setSelected] = useState(conditions[0])
+  const [calorie, setCalorie] = useState(0)
   const [result, setResult] = useState(undefined)
 
   const handleInputs = (e) => {
@@ -36,8 +44,16 @@ const BMI = () => {
   const handleSumbit = (e) => {
     e.preventDefault();
 
-    if (inputs.beforeWeight && inputs.afterWeight && inputs.month) { 
+    if (inputs.beforeWeight && inputs.afterWeight && inputs.month) {
+      const convert_pound = inputs.afterWeight * 2.205;
       let result = inputs.afterWeight - inputs.beforeWeight;
+      if (selected.name === 'inactive?(get minimal exercise)') {
+        setCalorie(12 * 300 * convert_pound)
+      } else if (selected.name === 'moderately active? (workout 3-4 times a week)') {
+        setCalorie(14 * 300 * convert_pound)
+      } else {
+        setCalorie(16 * 300 * convert_pound)
+      }
       if (inputs.month === 1) {
         if (0.1 <= result && result <= 0.4) {
           setResult("healthy")
@@ -196,6 +212,58 @@ const BMI = () => {
                     required
                   />
                 </div>
+                <div>
+                  <label htmlFor="condition">
+                    Are you</label>
+                  <Listbox id="condition" value={selected} onChange={setSelected}>
+                    <div className="relative mt-1">
+                      <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-white border-2 rounded-sm cursor-default focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                        <span className="block truncate">{selected.name}</span>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                          {/* <ChevronUpDownIcon
+                            className="w-5 h-5 text-gray-400"
+                            aria-hidden="true"
+                          /> */}
+                        </span>
+                      </Listbox.Button>
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                      >
+                        <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {conditions.map((condition, conditionIdx) => (
+                            <Listbox.Option
+                              key={conditionIdx}
+                              className={({ active }) =>
+                                `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                                }`
+                              }
+                              value={condition}
+                            >
+                              {({ selected }) => (
+                                <>
+                                  <span
+                                    className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                                      }`}
+                                  >
+                                    {condition.name}
+                                  </span>
+                                  {selected ? (
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                      {/* <CheckIcon className="w-5 h-5" aria-hidden="true" /> */}
+                                    </span>
+                                  ) : null}
+                                </>
+                              )}
+                            </Listbox.Option>
+                          ))}
+                        </Listbox.Options>
+                      </Transition>
+                    </div>
+                  </Listbox>
+                </div>
                 <button
                   type='submit'
                   className='h-10 mt-16 bg-[#d4f4f6] font-semibold rounded-md w-36'
@@ -216,6 +284,22 @@ const BMI = () => {
                 {/* over weight message */}
                 {
                   result === 'overweight' && <p className='text-base'>You need to loss weight</p>
+                }
+
+                {
+                  calorie && (
+                    <div>
+                      <p className='mt-1'>Your daily required calorie : {calorie}</p>
+                        <Link href='/suggested-food?from=calculator'>
+                        <a className='flex items-center justify-center mt-4 font-bold'>
+                          Go get Food Suggestion
+                          <span>
+                            <MdKeyboardArrowRight />
+                          </span>
+                        </a>
+                      </Link>
+                    </div>
+                  )
                 }
                 <button
                   onClick={() => {

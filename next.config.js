@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['i1.ytimg.com', 'www.parents.com','imagesvc.meredithcorp.io']
+    domains: ['i1.ytimg.com', 'res.cloudinary.com', 'www.parents.com', 'imagesvc.meredithcorp.io']
   }
 }
 
