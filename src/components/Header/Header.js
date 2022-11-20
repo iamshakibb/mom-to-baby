@@ -211,10 +211,10 @@ const MobileNav = () => {
                 LogOut
               </button>
             </li>
-          </> : <Link href={'/add-food-item'}>
+          </> : <Link href={'/signin'}>
             <a>
               <li>
-                Log In
+                  Sign In
               </li>
             </a>
           </Link>
