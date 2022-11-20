@@ -81,7 +81,12 @@ const SuggestedFood = () => {
                   foodData?.map((l, idx) => (
                     <div key={idx} className="cursor-pointer" onClick={() => handleSelectFood(l.name.toLowerCase())}>
                       <Image src={l.image} className="mb-4 rounded-lg" alt={l.name} width={500} height={300} />
-                      <h1 className='text-base'>{l.name}</h1>
+                      <div className='flex items-center justify-between'>
+                        <h1 className='text-base'>{l.name}</h1>
+                        <span>
+                          {l.calorie} Kcal
+                        </span>
+                      </div>
                     </div>
                   ))
                 }
