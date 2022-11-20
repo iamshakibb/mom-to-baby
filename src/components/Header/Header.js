@@ -185,7 +185,7 @@ const MobileNav = () => {
           ))
         }
         {
-          user && <>
+          user ? <>
             {
               user?.admin && (
                 <>
@@ -211,7 +211,13 @@ const MobileNav = () => {
                 LogOut
               </button>
             </li>
-          </>
+          </> : <Link href={'/add-food-item'}>
+            <a>
+              <li>
+                Log In
+              </li>
+            </a>
+          </Link>
         }
       </ul>
     </div>
