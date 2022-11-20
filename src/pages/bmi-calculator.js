@@ -289,7 +289,7 @@ const BMI = () => {
                 {
                   calorie && (
                     <div>
-                      <p className='mt-1'>Your daily required calorie : {calorie}</p>
+                        <p className='mt-1'>Your daily required calorie : {calorie.toFixed(2)}</p>
                         <Link href='/suggested-food?from=calculator'>
                         <a className='flex items-center justify-center mt-4 font-bold'>
                           Go get Food Suggestion
