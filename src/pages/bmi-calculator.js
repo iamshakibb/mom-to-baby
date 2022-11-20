@@ -48,11 +48,11 @@ const BMI = () => {
       const convert_pound = inputs.afterWeight * 2.205;
       let result = inputs.afterWeight - inputs.beforeWeight;
       if (selected.name === 'inactive?(get minimal exercise)') {
-        setCalorie(12 * 300 * convert_pound)
+        setCalorie(12 * convert_pound + 300)
       } else if (selected.name === 'moderately active? (workout 3-4 times a week)') {
-        setCalorie(14 * 300 * convert_pound)
+        setCalorie(14 *  convert_pound + 300)
       } else {
-        setCalorie(16 * 300 * convert_pound)
+        setCalorie(16 *  convert_pound + 300)
       }
       if (inputs.month === 1) {
         if (0.1 <= result && result <= 0.4) {
