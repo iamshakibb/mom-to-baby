@@ -6,6 +6,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Popover, Transition } from '@headlessui/react';
 import useAuth from '../../context/user.store';
 import { BiUserCircle } from "react-icons/bi"
+import { useRouter } from 'next/router';
 
 const Header = () => {
   // to change state of the menu
@@ -76,7 +77,12 @@ export default Header
 
 
 const DesktopNav = () => {
+  const router = useRouter()
   const { user, signOut } = useAuth()
+  const handleSignOut = () => {
+    signOut()
+    router.push("/")
+  }
   return (
     <div className='items-center justify-end hidden w-full lg:flex'>
       <ul className='flex justify-end mr-8 space-x-4 font-semibold uppercase text-s'>
@@ -150,7 +156,7 @@ const DesktopNav = () => {
                       )
                     }
                     <div className="p-4 cursor-pointer bg-gray-50" >
-                      <button className="flex items-center w-full" onClick={signOut}>
+                      <button className="flex items-center w-full" onClick={handleSignOut}>
                         <span className="text-sm font-medium text-gray-900">
                           Logout
                         </span>
@@ -178,7 +184,12 @@ const DesktopNav = () => {
 }
 
 const MobileNav = () => {
+  const router = useRouter()
   const { user, signOut } = useAuth()
+  const handleSignOut = () => {
+    signOut()
+    router.push("/")
+  }
   return (
     <div className='w-full h-full p-6 bg-white shadow-lg lg:hidden'>
       <ul className='flex flex-col justify-start w-full h-full space-y-4 font-semibold uppercase text-s'>
@@ -223,14 +234,14 @@ const MobileNav = () => {
               )
             }
             <li>
-              <button onClick={signOut}>
+              <button onClick={handleSignOut}>
                 LogOut
               </button>
             </li>
           </> : <Link href={'/signin'}>
             <a>
               <li>
-                  Sign In
+                Sign In
               </li>
             </a>
           </Link>

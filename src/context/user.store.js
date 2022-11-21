@@ -25,7 +25,7 @@ const useAuth = create()(
             ))
             return { success: true }
           } catch (error) {
-            notify('danger', err?.response?.data?.message || 'Unable to login. Please try again later')
+            notify('danger', error?.response?.data?.message || 'Unable to login. Please try again later')
             return { success: false }
           }
         },

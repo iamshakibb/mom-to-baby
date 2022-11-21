@@ -61,7 +61,6 @@ const handler = nc({
     const foodItemId = req.query?.id;
     try {
       const removedItem = await FoodList.findOneAndRemove({ _id: foodItemId })
-      console.log({ removedItem });
       if (removedItem) {
         res.json(removedItem)
         return res.end()

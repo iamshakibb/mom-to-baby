@@ -206,7 +206,7 @@ const AddFoodItem = () => {
       })
       const filterRemoveItem = rawFoodData.filter(data => data._id !== id)
       setRawFoodData(filterRemoveItem)
-      notify('success', "Unable to perform delete")
+      notify('success', "Delete successfull")
     } catch (error) {
       notify("danger", "Unable to perform delete")
     }
