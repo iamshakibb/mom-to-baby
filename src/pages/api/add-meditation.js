@@ -1,13 +1,11 @@
 
 import nc from "next-connect"
-import passport from "passport"
+import passport, { use } from "passport"
 import cors from "cors"
-import expressSession from "express-session"
-import "../../utils/passport"
 import connectDB from "../../db/mongoDBConnection"
 import initializingPassport from "../../utils/passport-jwt"
-import jwt from 'jsonwebtoken'
-import User from "../../schema/user.schema"
+import expressSession from "express-session"
+import MeditationList from "../../schema/meditation.schema"
 
 const handler = nc({
   onError: (err, req, res, next) => {
@@ -30,24 +28,19 @@ const handler = nc({
     next()
   })
   .use(passport.authenticate('jwt', { session: false }))
-  .put(async (req, res) => {
-    const email = req.body?.email
+  .post(async (req, res) => {
+    const { name, category_name, link } = req.body
     try {
-      const updateUser = await User.findOneAndUpdate({ email }, { admin: true })
-      if (updateUser) {
-        res.json({ user: updateUser })
-        return res.end()
-      } else {
-        return res.status(400).json({
-          message: 'user not found!',
-          user: updateUser
-        });
-      }
+      const food = await MeditationList.create({
+        name,
+        category_name,
+        link
+      })
+      return res.status(200).json(food)
     } catch (error) {
-      return res.status(400).json({
-        message: 'user not found!',
-      });
+      res.status(400).json({ message: error?.message || "Something went wrong!" })
     }
   });
 
 export default handler;
+

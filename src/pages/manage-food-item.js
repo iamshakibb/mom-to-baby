@@ -6,22 +6,32 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import AXIOS from '../libs/clients/axiosClient'
 import useAuth from '../context/user.store'
 import { Listbox, Transition } from '@headlessui/react'
-import { foodlist } from './suggested-food'
 import { FiChevronDown } from 'react-icons/fi'
 import { plans } from '../utils/data'
 import { GrFormCheckmark } from "react-icons/gr"
+import { randomId } from '../utils/randomId'
+import { FoodListWithHeading } from '../components/FoodListWithHeading/FoodListWithHeading'
+import Loading from '../components/Loading/Loading'
+import { categorize_list, fetchFoodData } from './suggested-food'
+import Modal from '../components/Modal'
+import notify from '../utils/notificator'
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview)
 const AddFoodItem = () => {
+  const [rawFoodData, setRawFoodData] = useState([])
   const { token } = useAuth()
+  const [foodData, setFoodData] = useState()
+  const [isOpen, setIsOpen] = useState(false)
   const [files, setFiles] = useState([])
   const [input, setInput] = useState({
     name: "",
     c_name: [foodlist[0].name],
     disease: [plans[0].name],
-    calorie: null,
+    calorie: 0,
     image: ''
   })
+  const [modalMood, setModalMood] = useState('Add Food Item')
+  const [selectedItemId, setSelectedItemId] = useState(undefined)
 
 
   useEffect(() => {
@@ -59,9 +69,10 @@ const AddFoodItem = () => {
     }
   }
 
-  const handleSumbit = async (e) => {
+  const handleSumbit = async (e, id) => {
     e.preventDefault();
-    if (input.c_name && input.calorie && input.disease && input.name && input.image && token) {
+    if (input.c_name && input.calorie && input.disease && input.name && input.image && token && modalMood === 'Add Food Item') {
+      // add food item
       try {
         const res = await AXIOS('/add-fooditem', {
           method: "POST",
@@ -76,30 +87,238 @@ const AddFoodItem = () => {
             calorie: Number(input.calorie)
           })
         })
+        notify('success', "Food item add successfully")
+        setRawFoodData(prev => [...prev, res.data])
+        setIsOpen(false)
         e.target.reset()
         setInput({
           name: "",
           c_name: [foodlist[0].name],
           disease: [plans[0].name],
-          calorie: null,
+          calorie: 0,
           image: ''
         })
         setFiles([])
       } catch (error) {
         console.log(error);
+        notify('danger', "Unable to add food item")
       }
+    } else if (input.c_name && input.calorie && input.disease && input.name && input.image && token && modalMood === 'edit food item') {
+      // edit food item
+      try {
+        const res = await AXIOS(`/get-food/${id}`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+          data: JSON.stringify({
+            name: input.name,
+            image: input.image,
+            category_name: input.c_name,
+            disease: input.disease,
+            calorie: Number(input.calorie)
+          })
+        })
+        notify('success', "Food item edit successfully")
+        const rawData = rawFoodData.map(rf => {
+          if (rf._id === res.data._id) {
+            return {
+              ...rf,
+              name: input.name,
+              image: input.image,
+              category_name: input.c_name,
+              disease: input.disease,
+              calorie: Number(input.calorie)
+            }
+          }
+          return rf
+        })
+        console.log({ rawData, rs: res.data });
+        setRawFoodData(rawData)
+        setIsOpen(false)
+        e.target.reset()
+        setInput({
+          name: "",
+          c_name: [foodlist[0].name],
+          disease: [plans[0].name],
+          calorie: 0,
+          image: ''
+        })
+        setFiles([])
+      } catch (error) {
+        notify('danger', "Unable to edit food item")
+      }
+    }
+  }
+
+  useEffect(() => {
+    fetchFoodData().then(res => {
+      if (res?.length > 0) {
+        setRawFoodData(res)
+      }
+    });
+  }, [])
+
+  useEffect(() => {
+    if (rawFoodData.length > 0) {
+      // categorized data by food category array
+      const category_data = categorize_list(rawFoodData)
+      setFoodData(category_data);
+    }
+  }, [rawFoodData])
+  const handleEdit = async (id) => {
+    try {
+      const data = await AXIOS(`/get-food/${id}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        },
+      })
+      setInput({
+        name: data.data.name,
+        c_name: [data.data.category_name[0]],
+        disease: [data.data.disease[0]],
+        calorie: data.data.calorie,
+        image: data.data.image
+      })
+      setModalMood("edit food item")
+      setIsOpen(true)
+      setSelectedItemId(id)
+    } catch (error) {
+      setInput({
+        name: "",
+        c_name: [foodlist[0].name],
+        disease: [plans[0].name],
+        calorie: 0,
+        image: ''
+      })
+      setSelectedItemId(undefined)
+      notify("Unable to perform edit")
+    }
+  }
+  const handleDelete = async (id) => {
+    try {
+      const res = AXIOS(`/get-food/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        },
+      })
+      const filterRemoveItem = rawFoodData.filter(data => data._id !== id)
+      setRawFoodData(filterRemoveItem)
+      notify('success', "Unable to perform delete")
+    } catch (error) {
+      notify("danger", "Unable to perform delete")
     }
   }
 
   return (
     <Layout>
-      <div className='container flex items-center justify-center w-full min-h-screen'>
-        <div className='max-w-[500px] w-full rounded-b-xl shadow-2xl'>
-          <div className='bg-[#fdcbf1] p-4 w-full text-center rounded-t-xl'>
-            <h1 className='text-xl'>Add Food Item</h1>
-          </div>
+      <div className="container">
+        <div className='p-5 mt-5 border'>
+          <h1 className='text-base'>Add new food item</h1>
+          <button
+            onClick={() => {
+              setIsOpen(true)
+              setModalMood('Add Food Item')
+            }}
+            className='h-10 mt-5 bg-[#d4f4f6] font-semibold rounded-md w-36'
+          >
+            Add Food
+          </button>
+        </div>
+        {
+          foodData ? (
+            <div className='grid grid-cols-1 gap-3 mt-14'>
+              {
+                foodData?.map((l) => (
+                  <FoodListWithHeading
+                    editable
+                    handleEdit={handleEdit}
+                    foodData={l}
+                    handleDelete={handleDelete}
+                    key={l.id}
+                  />
+                ))
+              }
+            </div>
+          ) : (
+            <Loading />
+          )
+        }
+      </div>
+      <FoodItemModal
+        handleSumbit={handleSumbit}
+        handleInputs={handleInputs}
+        input={input}
+        setInput={setInput}
+        isOpen={isOpen}
+        closeModal={() => {
+          setIsOpen(prev => !prev)
+          setSelectedItemId(undefined)
+          setInput({
+            name: "",
+            c_name: [foodlist[0].name],
+            disease: [plans[0].name],
+            calorie: 0,
+            image: ''
+          })
+        }}
+        files={files}
+        setFiles={setFiles}
+        heading={modalMood}
+        selectedItemId={selectedItemId}
+      />
+    </Layout>
+  )
+}
 
-          <form onSubmit={(e) => handleSumbit(e)} className='px-8 py-10 space-y-4'>
+export default AddFoodItem
+
+export const foodlist = [
+  {
+    id: randomId(),
+    name: 'protein enriched',
+    slug: 'protein-enriched',
+    image: '/images/meat.png'
+  },
+  {
+    id: randomId(),
+    name: 'carbohydrate enriched',
+    slug: 'carbohydrate-enriched',
+    image: '/images/canberry_juice.png'
+  },
+  {
+    id: randomId(),
+    name: 'fat enriched',
+    slug: 'fat-enriched',
+    image: '/images/avocado.jpg'
+  },
+  {
+    id: randomId(),
+    name: 'vitamins and minerals enriched',
+    slug: 'vitamins-and-minerals-enriched',
+    image: '/images/Spinach.png'
+  }
+]
+
+const FoodItemModal = ({
+  handleSumbit,
+  handleInputs,
+  input,
+  setInput,
+  isOpen,
+  closeModal,
+  files,
+  setFiles,
+  heading,
+  selectedItemId
+}) => {
+  return (
+    <Modal isHeightAuto isOpen={isOpen} closeModal={closeModal} heading={heading}>
+      <div className='flex items-center justify-center w-full h-auto'>
+        <div className='max-w-[500px] w-full rounded-b-xl'>
+          <form onSubmit={(e) => handleSumbit(e, selectedItemId)} className='px-2 py-10 space-y-2'>
             <div className='flex flex-col space-y-4'>
               <label htmlFor="name" className='text-sm'>
                 Name
@@ -110,6 +329,7 @@ const AddFoodItem = () => {
                 type="text"
                 name="name"
                 id="name"
+                value={input.name}
                 required
               />
             </div>
@@ -221,33 +441,35 @@ const AddFoodItem = () => {
                 name="calorie"
                 id="calorie"
                 required
+                value={input.calorie}
               />
             </div>
-            <div className='space-y-4'>
-              <FilePond
-                files={files}
-                required={true}
-                allowFileEncode={true}
-                onupdatefiles={setFiles}
-                allowMultiple={false}
-                maxFiles={3}
-                name="files"
-                labelIdle="Drag & Drop your photo"
-              />
-            </div>
+            {
+              heading !== 'edit food item' && <div className='space-y-4'>
+                <FilePond
+                  files={files}
+                  required={true}
+                  allowFileEncode={true}
+                  onupdatefiles={setFiles}
+                  allowMultiple={false}
+                  maxFiles={3}
+                  name="files"
+                  labelIdle="Drag & Drop your photo"
+                />
+              </div>
+            }
             <div className='flex items-center justify-center w-full'>
               <button
                 type='submit'
                 className='h-10 mt-16 bg-[#d4f4f6] font-semibold rounded-md w-36'
               >
-                Add Food Item
+                {heading !== 'edit food item' ? "Add Food Item" : "Edit Food Item"}
               </button>
             </div>
           </form>
         </div>
       </div>
-    </Layout>
+    </Modal>
   )
 }
 
-export default AddFoodItem

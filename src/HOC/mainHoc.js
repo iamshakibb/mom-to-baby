@@ -29,7 +29,7 @@ function mainHOC(
         router.push('/')
       }
 
-      if (user && !user.admin && router.asPath === '/add-admin') {
+      if (user && !user.admin && (router.asPath === '/add-admin' || router.asPath === '/manage-food-item' || router.asPath === '/manage-meditation')) {
         router.push('/')
       }
     }, [user, router])

@@ -129,10 +129,19 @@ const DesktopNav = () => {
                             </Link>
                           </div>
                           <div className="p-4 cursor-pointer bg-gray-50">
-                            <Link href="/add-food-item" className="flex items-center">
+                            <Link href="/manage-food-item" className="flex items-center">
                               <a>
                                 <span className="text-sm font-medium text-gray-900">
-                                  Add Food Item
+                                  Manage Food Item
+                                </span>
+                              </a>
+                            </Link>
+                          </div>
+                          <div className="p-4 cursor-pointer bg-gray-50">
+                            <Link href="/manage-meditation" className="flex items-center">
+                              <a>
+                                <span className="text-sm font-medium text-gray-900">
+                                  Manage Meditation
                                 </span>
                               </a>
                             </Link>
@@ -196,10 +205,17 @@ const MobileNav = () => {
                       </li>
                     </a>
                   </Link>
-                  <Link href={'/add-food-item'}>
+                  <Link href={'/manage-food-item'}>
                     <a>
                       <li>
-                        Add Food Item
+                        Manage Food Item
+                      </li>
+                    </a>
+                  </Link>
+                  <Link href={'/manage-meditation'}>
+                    <a>
+                      <li>
+                        Manage Meditation
                       </li>
                     </a>
                   </Link>

@@ -6,40 +6,103 @@ import { FiCheck } from "react-icons/fi"
 import { Disclosure } from '@headlessui/react'
 import Image from 'next/image'
 import { foodList, plans } from '../../utils/data'
-import Modal from '../../components/Modal/Modal'
 import { randomId } from '../../utils/randomId'
 import Link from 'next/link'
+import AddFood from '../../components/AddFood/AddFood'
+import Complication from '../../components/Complication/Complication'
+import AXIOS from '../../libs/clients/axiosClient'
+import notify from '../../utils/notificator'
 import { useRouter } from 'next/router'
-
+import Modal from "../../components/Modal"
+import { FoodListWithHeading } from '../../components/FoodListWithHeading/FoodListWithHeading'
+import Loading from '../../components/Loading/Loading'
 
 const SuggestedFood = () => {
   const router = useRouter()
   const [selected, setSelected] = useState([])
+  const [foodData, setFoodData] = useState()
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    const complication = localStorage.getItem("complication")
+    if (complication) {
+      setSelected(JSON.parse(complication))
+    }
+  }, [])
+
+  useEffect(() => {
+    const filter_data = foodData?.map(category => {
+      const foodList = [];
+      category.items.forEach(list => {
+        if (selected.includes(list.disease.toLocaleString())) {
+          foodList.unshift(list)
+        } else {
+          foodList.push(list)
+        }
+      })
+      return {
+        ...category,
+        items: foodList
+      }
+    })
+    setFoodData(filter_data)
+  }, [selected])
+
+  const handleOption = (e) => {
+    if (selected.includes(e)) {
+      setSelected((prev) => [...prev.filter(p => p !== e)])
+      localStorage.setItem("complication", JSON.stringify([...selected.filter(p => p !== e)]))
+    } else {
+      setSelected((prev) => [...prev, e])
+      localStorage.setItem("complication", JSON.stringify([...selected, e.toLowerCase()]))
+    }
+  }
+
+  useEffect(() => {
+    fetchFoodData().then(res => {
+      if (res?.length > 0) {
+        // categorized data by food category array
+        const category_data = categorize_list(res)
+        setFoodData(category_data);
+      }
+    });
+  }, [])
+
+  const handleSelectFood = (name) => {
+    const selectedFood = JSON.parse(localStorage.getItem('selected-food')) || []
+    if (!selectedFood.includes(name)) {
+      selectedFood.push(name)
+    }
+    localStorage.setItem("selected-food", JSON.stringify(selectedFood))
+  }
 
   useEffect(() => {
     if (router && router.query.from) {
       setIsOpen(true)
     }
   }, [router])
+
   return (
     <Layout>
-      <Modal isOpen={isOpen} closeModal={() => setIsOpen(prev => !prev)} >
+      <Modal heading={'Keep that in mind !!'} isOpen={isOpen} closeModal={() => setIsOpen(prev => !prev)} >
         <p className='px-5 text-base'>You must select from all the categories to maintain your blood sugar levels and prevent yourself from feeling sick and lightheaded.</p>
       </Modal>
       <div className='container mt-5'>
-        <div className='container grid grid-cols-1 mt-10 md:grid-cols-2 justify-items-center'>
+        {/* <AddFood handleSelectFood={handleSelectFood} /> */}
+        <Complication selected={selected} handleOption={handleOption} />
+        <div >
           {
-            foodlist.map(m => (
-              <Link key={m.id} href={`/suggested-food/${m.slug.toLowerCase()}`}>
-                <a className="flex flex-col items-center justify-center mb-10">
-                  <div className='relative group w-[250px] h-[250px] xl:w-[350px] xl:h-[350px] lg:w-[300px] lg:h-[300px] md:w-[200px] md:h-[200px] sm:w-[380px] sm:h-[380px] mb-3'>
-                    <Image src={m.image} width={300} height={300} alt={m.name} layout="fill" className='rounded-lg' />
-                  </div>
-                  <h1 className='w-full max-w-sm mb-6 text-lg text-center capitalize'>{m.name}</h1>
-                </a>
-              </Link>
-            ))
+            foodData ? (
+              <div className='grid grid-cols-1 gap-3 mt-14'>
+                {
+                  foodData?.map((l) => (
+                    <FoodListWithHeading handleSelectFood={handleSelectFood} foodData={l} key={l.id} />
+                  ))
+                }
+              </div>
+            ) : (
+              <Loading />
+            )
           }
         </div>
       </div>
@@ -48,33 +111,27 @@ const SuggestedFood = () => {
 }
 export default SuggestedFood
 
-export const foodlist = [
-  {
-    id: randomId(),
-    name: 'protein enriched',
-    slug: 'protein-enriched',
-    image: '/images/meat.png'
-  },
-  {
-    id: randomId(),
-    name: 'carbohydrate enriched',
-    slug: 'carbohydrate-enriched',
-    image: '/images/canberry_juice.png'
-  },
-  {
-    id: randomId(),
-    name: 'fat enriched',
-    slug: 'fat-enriched',
-    image: '/images/avocado.jpg'
-  },
-  {
-    id: randomId(),
-    name: 'vitamins and minerals enriched',
-    slug: 'vitamins-and-minerals-enriched',
-    image: '/images/Spinach.png'
+
+export const categorize_list = (res) => {
+  return ['protein enriched', 'carbohydrate enriched', 'fat enriched', 'vitamins and minerals enriched'].map(f => {
+    const data = res?.filter(d => d.category_name.includes(f));
+    if (data.length > 0) {
+      return {
+        id: randomId(),
+        name: f,
+        items: data
+      }
+    }
+  })
+}
+
+
+
+export const fetchFoodData = async () => {
+  try {
+    const res = await AXIOS('/get-food')
+    return res.data
+  } catch (error) {
+    notify('danger', 'Unable to fetch food data')
   }
-]
-
-
-
-
+}

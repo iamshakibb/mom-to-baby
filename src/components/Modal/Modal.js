@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 import { FaTimes } from 'react-icons/fa'
-const Modal = ({ isOpen, closeModal, children, heading }) => {
+const Modal = ({ isOpen, closeModal, children, heading, isHeightAuto }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -20,7 +20,7 @@ const Modal = ({ isOpen, closeModal, children, heading }) => {
             <Dialog.Panel className="mx-auto bg-white rounded max-w-[600px] w-full p-5 relative">
               <Dialog.Title className="mb-5 text-lg text-center">{heading}</Dialog.Title>
 
-              <div className='h-[400px] flex items-center justify-center overflow-y-scroll'>
+              <div className={`${isHeightAuto ? `h-auto` : `h-[400px]`} flex items-center justify-center overflow-y-scroll`}>
                 {children}
               </div>
 
